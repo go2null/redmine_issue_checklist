@@ -18,3 +18,9 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 
 [source: http://www.redmine.org/plugins/issue_checklist]
 
+Changelog
+---------
+
+### 0.0.1 (2011-10-16)
+
+_Compatible with Redmine 1.2.x._

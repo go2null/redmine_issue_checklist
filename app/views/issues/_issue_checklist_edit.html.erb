@@ -1,0 +1,75 @@
+<%  if !@issue.blank? && @issue.project.allows_to?(:add_checklists) %>
+
+<script type="text/javascript" charset="utf-8">
+  window.onload = function() {
+         Sortable.create('issue_checklist_items',{tag:'li'});
+  };
+</script>  
+
+<style type="text/css" media="screen">
+
+  div#issue_checklist ul {
+  	list-style: none;    
+  	padding-left: 0px;
+  	margin-bottom: 0px;
+  }
+
+  div#issue_checklist li {
+    padding-bottom: 10px;
+    margin-left: 10px;
+  }
+  
+  #issue_checklist_items li label {
+    margin-left: 5px;
+  }
+  
+  #issue_checklist_items li.is-done-checklist-item label {
+    text-decoration: line-through; 
+    color: #999;
+  }
+  
+  #issue_checklist a.delete img {
+    vertical-align: top;
+    margin-left: 1px;
+  }
+  
+  #issue_checklist li:hover a.delete {opacity: 1;}  
+  #issue_checklist a.delete {opacity: 0.4;}
+  
+</style>
+
+<hr />
+<div id="issue_checklist">
+  <div class="contextual">
+  <% if User.current.allowed_to?(:add_checklists, @project) %>
+    <%= toggle_link l(:button_add), 'new-checklist-form' %>
+  <% end %>
+  </div>
+  <p><strong><%=l(:label_issue_checklist_plural)%></strong></p>
+  
+  <ul id="issue_checklist_items">
+  <% @issue.checklist.each do |checklist_item| %>
+    <%= render :partial => 'issue_checklists/checklist_item', :object => checklist_item %>
+  <% end %>
+  </ul>
+   		
+  <% remote_form_for(:checklist, 
+                   :url => {:controller => 'issue_checklists', :action => 'new', :issue_id => @issue, :project_id => @project},
+                   :method => :post,
+                   :complete => "Form.Element.focus('issue_checklist_items');",
+                   :html => {:id => 'new-checklist-form', :style => 'display: none;'}) do |f| %>
+   		
+   		<%= text_field_tag 'new_checklist_item', '', :size => 60, :maxlength => "100" %> 
+   		    <br/>       
+   		    <%= submit_tag l(:button_add) %>
+          <%= toggle_link l(:button_cancel), 'new-checklist-form'%>    
+                   
+  <% end if User.current.allowed_to?(:add_checklists, @project)%>
+
+</div>
+
+<% content_for :header_tags do %>
+	<%= javascript_include_tag :issue_checklists, :plugin => 'redmine_issue_checklist'  %>
+<% end %>
+
+<% end %>
