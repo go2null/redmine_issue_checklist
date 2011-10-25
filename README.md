@@ -21,6 +21,16 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 Changelog
 ---------
 
+### 1.0.0 (2011-10-25)
+
+_Compatible with Redmine 1.2.x._
+
+* Feature: History of checklist changes
+* Feature: Bulk change in edit mode
+* Bug: Issue click
+* Bug: Migration error with postgresql
+* Bug: IPhone edit problems
+
 ### 0.0.1 (2011-10-16)
 
 _Compatible with Redmine 1.2.x._
