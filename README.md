@@ -21,6 +21,15 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 Changelog
 ---------
 
+### 1.0.1 (2012-02-02)
+
+_Compatible with Redmine 1.2.x, 1.3.x, 1.4.x._
+
+* Feature: Setting for saving checklist changes in journal
+* Feature: Setting for calculation issue done ratio
+* Feature: French translation (many thanks to Laurent ELGARD)
+* Feature: Support redmine trunk version (routes)
+
 ### 1.0.0 (2011-10-25)
 
 _Compatible with Redmine 1.2.x._
