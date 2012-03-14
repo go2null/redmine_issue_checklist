@@ -21,6 +21,14 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 Changelog
 ---------
 
+### 1.0.2 (2012-03-14)
+
+_Compatible with Redmine 1.3.x, 1.4.x._
+
+* Feature: Some support for Textile syntax
+* Feature: Permissions for View, Done and Edit checklist
+* Bug: don't work in firefox 6,7,8
+
 ### 1.0.1 (2012-02-02)
 
 _Compatible with Redmine 1.2.x, 1.3.x, 1.4.x._
