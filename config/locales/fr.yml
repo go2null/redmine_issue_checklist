@@ -1,0 +1,4 @@
+# French strings go here for Rails i18n
+fr:
+  label_issue_checklist_plural: Liste de Tâches
+  field_checklist: Tâche

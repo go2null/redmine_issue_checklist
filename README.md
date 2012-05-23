@@ -21,6 +21,12 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 Changelog
 ---------
 
+### 1.0.3 (2012-05-23)
+
+_Compatible with Redmine 1.4.x, 1.3.x._
+
+* Bug: Drop checklist on update if no checklist permission
+
 ### 1.0.2 (2012-03-14)
 
 _Compatible with Redmine 1.3.x, 1.4.x._

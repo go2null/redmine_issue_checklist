@@ -1,44 +1,36 @@
 class IssueChecklistsController < ApplicationController
   unloadable
   
-  before_filter :find_checklist_item, :only => [:done, :delete]
-  before_filter :find_issue_project, :only => :new
-  before_filter :authorize
-
-  def new
-    (render_403; return false) unless (User.current.allowed_to?({:controller => :issue_checklists, :action => :new}, @project))
-    @checklist_item = IssueChecklist.new()
-    @checklist_item.subject = params[:new_checklist_item]
-    @checklist_item.issue_id = params[:issue_id]
-    @checklist_item.author_id = User.current.id
-    
-    if @checklist_item.save
-      respond_to do |format|
-        format.js do 
-          render :update do |page|   
-            page["new-checklist-form"].reset     
-            page.insert_html :bottom, "issue_checklist_items", :partial => 'checklist_item', :object => @checklist_item, :locals => {:issue => @checklist_item.issue}
-            page["checklist_item_#{@checklist_item.id}"].visual_effect :appear    
-            flash.discard   
-          end
-        end if request.xhr?       
-        format.html {redirect_to :back}
-      end
-    else
-      redirect_to :back 
-    end
-    
-  end
+  before_filter :find_checklist_item
   
   def done
-    (render_403; return false) unless @checklist_item.editable_by?(User.current)
+    (render_403; return false) unless User.current.allowed_to?(:done_checklists, @checklist_item.issue.project)
+
+    old_checklist_item = @checklist_item.clone 
+    @checklist_item.is_done = !@checklist_item.is_done
     
-    @checklist_item.is_done = params[:is_done]
-    @checklist_item.save
+    if @checklist_item.save
+    
+      if RedmineIssueChecklist.settings[:save_log] && old_checklist_item.info != @checklist_item.info
+        journal = Journal.new(:journalized => @checklist_item.issue, :user => User.current)
+        journal.details << JournalDetail.new(:property => 'attr',
+                                                      :prop_key => 'checklist',
+                                                      # :old_value => old_checklist_item.info,
+                                                      :value => @checklist_item.info)
+        journal.save
+      end 
+      
+      if (Setting.issue_done_ratio == "issue_field") && RedmineIssueChecklist.settings[:issue_done_ratio]
+        done_checklist = @checklist_item.issue.checklist.map{|c| c.is_done ? 1 : 0}
+        @checklist_item.issue.done_ratio = (done_checklist.count(1) * 10) / done_checklist.count * 10
+        @checklist_item.issue.save
+      end
+    end
     respond_to do |format|
       format.js do 
         render :update do |page|  
-            page["checklist_item_#{@checklist_item.id}"].visual_effect :appear   
+            # page["checklist_item_#{@checklist_item.id}"].visual_effect :appear  
+            page.send :record, "Element.toggleClassName('checklist_item_#{@checklist_item.id}', 'is-done-checklist-item')" 
         end
       end     
       format.html {redirect_to :back }
@@ -47,7 +39,7 @@ class IssueChecklistsController < ApplicationController
   end     
   
   def delete
-    (render_403; return false) unless @checklist_item.editable_by?(User.current)
+    (render_403; return false) unless User.current.allowed_to?(:edit_checklists, @checklist_item.issue.project)
     
     @checklist_item.delete
     respond_to do |format|
@@ -62,12 +54,6 @@ class IssueChecklistsController < ApplicationController
   end     
   
   private
-  
-  def find_issue_project
-    @issue = Issue.find(params[:issue_id])
-    @project = @issue.project
-  end
-  
   
   def find_checklist_item
     @checklist_item = IssueChecklist.find(params[:checklist_item_id]) 
