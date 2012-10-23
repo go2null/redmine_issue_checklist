@@ -21,6 +21,13 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 Changelog
 ---------
 
+### 2.0.0 (2012-10-23)
+
+* Compatible with Redmine 2.1.x, 2.0.x.
+
+* Feature: Some support Redmine 2
+* Feature: Checklist drag and drop (reorder items)
+
 ### 1.0.3 (2012-05-23)
 
 _Compatible with Redmine 1.4.x, 1.3.x._
