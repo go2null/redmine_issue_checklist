@@ -21,6 +21,12 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 Changelog
 ---------
 
+### 2.0.3 (2012-10-31)
+
+_Compatible with Redmine 2.1.x, 2.0.x._
+
+* Fixed bug with copying all items from source issue to destination
+
 ### 2.0.2 (2012-10-29)
 
 _Compatible with Redmine 2.1.x, 2.0.x._
