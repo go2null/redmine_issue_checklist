@@ -21,6 +21,12 @@ Seems like the functionality offered by the mod (copy checklist when issue is co
 Changelog
 ---------
 
+### 2.0.4 (2012-12-18)
+
+_Compatible with Redmine 2.2.x, 2.1.x, 2.0.x._
+
+* Bug with wiki formatting on redmine 2.x
+
 ### 2.0.3 (2012-10-31)
 
 _Compatible with Redmine 2.1.x, 2.0.x._
