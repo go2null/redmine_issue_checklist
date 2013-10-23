@@ -8,7 +8,18 @@ end
 
 module RedmineIssueChecklist
 
-  def self.settings() Setting[:plugin_redmine_issue_checklist].blank? ? {} : Setting[:plugin_redmine_issue_checklist] end
+  def self.settings() 
+    Setting[:plugin_redmine_issue_checklist].blank? ? {} : Setting[:plugin_redmine_issue_checklist] 
+  end
+
+
+  def self.save_log?
+    self.settings["save_log"]
+  end
+
+  def self.done_ratio?
+    (Setting.issue_done_ratio == "issue_field") && self.settings["issue_done_ratio"]
+  end
     
   # module Hooks
   #   class ViewLayoutsBaseHook < Redmine::Hook::ViewListener     

@@ -4,13 +4,16 @@ class IssueChecklistsController < ApplicationController
   before_filter :find_checklist_item
   
   def done
-    (render_403; return false) unless User.current.allowed_to?(:done_checklists, @checklist_item.issue.project)
+    unless User.current.allowed_to?(:done_checklists, @checklist_item.issue.project)
+      render_403
+      return false
+    end
 
     old_checklist_item = @checklist_item.dup
     @checklist_item.is_done = !@checklist_item.is_done
     
     if @checklist_item.save
-      if RedmineIssueChecklist.settings[:save_log] && old_checklist_item.info != @checklist_item.info
+      if RedmineIssueChecklist.save_log? && old_checklist_item.info != @checklist_item.info
         journal = Journal.new(:journalized => @checklist_item.issue, :user => User.current)
         journal.details << JournalDetail.new(:property => 'attr',
                                                       :prop_key => 'checklist',
@@ -19,7 +22,7 @@ class IssueChecklistsController < ApplicationController
         journal.save
       end
       
-      if (Setting.issue_done_ratio == "issue_field") && RedmineIssueChecklist.settings[:issue_done_ratio]
+      if RedmineIssueChecklist.done_ratio?  
         done_checklist = @checklist_item.issue.checklist.map{|c| c.is_done ? 1 : 0}
         @checklist_item.issue.done_ratio = (done_checklist.count(1) * 10) / done_checklist.count * 10
         @checklist_item.issue.save
@@ -33,7 +36,10 @@ class IssueChecklistsController < ApplicationController
   end     
   
   def delete
-    (render_403; return false) unless User.current.allowed_to?(:edit_checklists, @checklist_item.issue.project)
+    unless User.current.allowed_to?(:edit_checklists, @checklist_item.issue.project)
+      render_403
+      return false
+    end
     
     @checklist_item.delete
     respond_to do |format|
